@@ -23,4 +23,3 @@ Create and activate a virtual environment, then install dependencies:
     python -m venv .venv
     .\.venv\Scripts\Activate.ps1
     python -m pip install -r requirements.txt
-'@ | Set-Content README.md

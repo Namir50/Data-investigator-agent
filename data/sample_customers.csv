@@ -1,0 +1,8 @@
+
+customer_id,age,income,city
+101,25,45000,Mumbai
+102,32,65000,Pune
+103,,52000,Mumbai
+104,45,90000,Delhi
+104,45,90000,Delhi
+105,150,40000,Nashik

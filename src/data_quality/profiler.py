@@ -23,8 +23,8 @@ def profile_csv(file_path: str | Path) -> dict:
             }
             for column in df.columns
         },
-        "duplicated_count": duplicate_count,
-        "numeric_suimmary": numeric_summary.to_dict(),
+        "duplicated_count": duplicated_count,
+        "numeric_summary": numeric_summary.to_dict(),
 
     }
     return profile

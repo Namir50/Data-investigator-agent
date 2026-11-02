@@ -1,8 +1,8 @@
 from pathlib import Path
 import pandas as pd 
 
-def profile_csv(file_path: str | Path) -> dict:
-    df = pd.read_csv(file_path)
+def profile_dataframe(df: pd.DataFrame) -> dict:
+    """Generate a basic data profile from a DataFrame."""
 
     missing_values = df.isna().sum()
     duplicated_count = int(df.duplicated().sum())
@@ -23,7 +23,7 @@ def profile_csv(file_path: str | Path) -> dict:
             }
             for column in df.columns
         },
-        "duplicated_count": duplicated_count,
+        "duplicate_count": duplicated_count,
         "numeric_summary": numeric_summary.to_dict(),
 
     }

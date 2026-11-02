@@ -1,8 +1,13 @@
-import pandas as pd 
+import pandas as pd
+
+from src.data_quality.profiler import profile_dataframe
 from src.data_quality.validator import validate_age, validate_income
 
+
 def analyze_dataframe(df: pd.DataFrame) -> dict:
-    """validating dataframe"""
+    """Profile and validate a DataFrame."""
+
+    profile = profile_dataframe(df)
 
     issues = []
 
@@ -13,12 +18,9 @@ def analyze_dataframe(df: pd.DataFrame) -> dict:
         issues.extend(validate_income(df))
 
     report = {
-        "row_count" : int(df.shape[0]),
-        "column_count": int(df.shape[1]),
+        "profile": profile,
         "issues": issues,
-        "issue_count" : len(issues)
-    } 
+        "issue_count": len(issues),
+    }
 
     return report
-
-

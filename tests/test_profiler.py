@@ -1,20 +1,20 @@
+import pandas as pd
 
-from src.data_quality.profiler import profile_csv
+from src.data_quality.profiler import profile_dataframe
 
 
-def test_profile_counts_rows(tmp_path):
-    csv_file = tmp_path / "sample.csv"
+def test_profile_dataframe():
+    df = pd.DataFrame({
+        "customer_id": [101, 102, 102],
+        "age": [25, None, None],
+    })
 
-    csv_file.write_text(
-        "customer_id,age\n"
-        "101,25\n"
-        "102,32\n"
-        "103,45\n",
-        encoding="utf-8",
-    )
-
-    profile = profile_csv(csv_file)
+    profile = profile_dataframe(df)
 
     assert profile["row_count"] == 3
-    assert profile["columns"]["age"]["missing_count"] == 0
-    assert profile["columns"]["age"]["unique_count"] == 3
+    assert profile["column_count"] == 2
+
+    assert profile["columns"]["age"]["missing_count"] == 2
+    assert profile["columns"]["age"]["missing_percentage"] == 66.67
+
+    assert profile["duplicate_count"] == 1

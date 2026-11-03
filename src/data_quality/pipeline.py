@@ -1,7 +1,7 @@
 import pandas as pd
 
 from src.data_quality.profiler import profile_dataframe
-from src.data_quality.validator import validate_age, validate_income
+from src.data_quality.validator import validate_age, validate_income, validate_duplicates
 
 
 def analyze_dataframe(df: pd.DataFrame) -> dict:
@@ -16,6 +16,8 @@ def analyze_dataframe(df: pd.DataFrame) -> dict:
 
     if "income" in df.columns:
         issues.extend(validate_income(df))
+
+    issues.extend(validate_duplicates(df))
 
     report = {
         "profile": profile,

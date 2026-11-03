@@ -31,3 +31,17 @@ def validate_income(df: pd.DataFrame) -> list[dict]:
             "issue":"income cannot be negative",
         })
     return issues
+
+
+def validate_duplicates(df: pd.DataFrame) ->list[dict]:
+    """flag duplicate rows"""
+    issues = []
+    duplicate_rows = df[df.duplicated(keep = 'first')]
+
+    for index,row in duplicate_rows.iterrows():
+        issues.append({
+            "row_index": int(index),
+            "row": row.to_dict(),
+            "issue" : "duplicate row"
+        })
+    return issues

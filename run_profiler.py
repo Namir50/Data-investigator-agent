@@ -1,8 +1,8 @@
 
 from pprint import pprint
 
-from src.data_quality.profiler import profile_csv
+from src.data_quality.profiler import profile_dataframe
 
-profile = profile_csv("data/sample_customers.csv")
+profile = profile_dataframe("data/sample_customers.csv")
 
 pprint(profile)

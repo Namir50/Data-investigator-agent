@@ -45,3 +45,20 @@ def validate_duplicates(df: pd.DataFrame) ->list[dict]:
             "issue" : "duplicate row"
         })
     return issues
+
+def validate_missing_values(df: pd.DataFrame) -> list[dict]:
+    """flag missing values in the dataframe"""
+    issues = []
+
+    missing_values = df.isna()
+
+    for column in df.columns:
+        missing_rows = df[missing_values[column]]
+        
+        for index,row in missing_rows.iterrows():
+            issues.append({
+                "row_index": int(index),
+                "column": column,
+                "issues":"missing value detected"
+            })
+    return issues

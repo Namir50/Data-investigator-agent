@@ -107,3 +107,90 @@ def detect_numeric_candidates(df: pd.DataFrame) -> list[dict]:
 
     # Return all detected issues after inspecting every column
     return issues
+
+def analyze_column_type(df: pd.DataFrame) -> dict:
+    """infer likely column types using numberic conversion ratios"""
+
+    results = {}
+
+    for column in df.columns:
+        converted = pd.to_numeric(df[column], errors="coerce")
+        total_values = df[column].notna().sum()
+        numeric_values = converted.notna().sum()
+
+        numeric_ratios = {
+            numeric_ratios/total_values
+            if total_values > 0 else 0
+        }
+
+        if numeric_ratios > 0.50:
+            inferred_type = "numeric"
+        else:
+            inferred_type = "non-numeric"
+
+        results[column] = {
+            "original_dtype": str(df[column].dtype),
+            "numeric_ratio": round(float(numeric_ratios), 2),
+            "inferred_type": inferred_type
+        }
+    return results
+
+
+def analyze_column_types(df: pd.DataFrame) -> dict:
+    """Infer likely column types using numeric conversion ratios."""
+
+    results = {}
+
+    for column in df.columns:
+        converted = pd.to_numeric(df[column], errors="coerce")
+
+        total_values = df[column].notna().sum()
+        numeric_values = converted.notna().sum()
+
+        numeric_ratio = (
+            numeric_values / total_values
+            if total_values > 0
+            else 0
+        )
+
+        if numeric_ratio > 0.50:
+            inferred_type = "likely_numeric"
+        else:
+            inferred_type = "likely_text"
+
+        results[column] = {
+            "original_dtype": str(df[column].dtype),
+            "numeric_ratio": round(float(numeric_ratio), 2),
+            "inferred_type": inferred_type
+        }
+
+    return results
+
+
+def detect_suspicious_numeric_values(df: pd.DataFrame) -> list[dict]:
+    """Detect non-numeric values in columns classified as likely numeric."""
+
+    suspicious_values = []
+
+    column_analysis = analyze_column_types(df)
+
+    for column, details in column_analysis.items():
+
+        if details["inferred_type"] != "likely_numeric":
+            continue
+
+        converted = pd.to_numeric(df[column], errors="coerce")
+
+        invalid_mask = df[column].notna() & converted.isna()
+
+        invalid_values = df.loc[invalid_mask, column]
+
+        for index, value in invalid_values.items():
+            suspicious_values.append({
+                "row_index": int(index),
+                "column": column,
+                "value": str(value),
+                "issue": "non-numeric value in likely numeric column"
+            })
+
+    return suspicious_values

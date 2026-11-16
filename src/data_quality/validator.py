@@ -81,7 +81,9 @@ def analyze_column_types(df: pd.DataFrame) -> dict:
             else 0
         )
 
-        if numeric_ratio > 0.50:
+        if total_values == 0:
+            inferred_type = "unknown"
+        elif numeric_ratio > 0.50:
             inferred_type = "likely_numeric"
         else:
             inferred_type = "likely_text"

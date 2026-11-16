@@ -63,4 +63,29 @@ def test_detect_suspicious_numeric_values():
 
     pd.testing.assert_frame_equal(df, original_df)
 
-    
+
+
+def test_analyze_column_types_handles_empty_columns():
+    df = pd.DataFrame({
+        "age": [25, 30, 40],
+        "salary": [None, None, None]
+    })
+
+    results = analyze_column_types(df)
+
+    assert results["age"]["inferred_type"] == "likely_numeric"
+    assert results["salary"]["inferred_type"] == "unknown"
+    assert results["salary"]["numeric_ratio"] == 0.0
+
+def test_analyze_column_types_handles_empty_columns_2():
+    df = pd.DataFrame({
+        "age": [],
+        "salary": [],
+        "department": []
+    })
+
+    results = analyze_column_types(df)
+
+    assert results["age"]["inferred_type"] == "unknown"
+    assert results["salary"]["inferred_type"] == "unknown"
+    assert results["salary"]["numeric_ratio"] == 0.0

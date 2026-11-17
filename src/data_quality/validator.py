@@ -124,3 +124,36 @@ def detect_suspicious_numeric_values(df: pd.DataFrame) -> list[dict]:
             })
 
     return suspicious_values
+
+def validate_dataset(df: pd.DataFrame) -> dict:
+    """Validate the basic structure of a dataset."""
+
+    issues = []
+
+    if len(df.index) == 0 and len(df.columns) == 0:
+        issues.append({
+            "issue": "dataset is empty",
+            "description": "The dataset contains no rows and no columns."
+        })
+
+    elif len(df.index) == 0:
+        issues.append({
+            "issue": "dataset has no rows",
+            "description": "The dataset contains no rows."
+        })
+
+    elif len(df.columns) == 0:
+        issues.append({
+            "issue": "dataset has no columns",
+            "description": "The dataset contains no columns."
+        })
+
+    return {
+        "status": "valid dataset" if not issues else "invalid dataset",
+        "message": "No structural errors detected." if not issues else "Structural errors detected.",
+        "issues": issues
+    }
+
+
+
+

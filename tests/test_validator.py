@@ -1,5 +1,5 @@
 from src.data_quality.validator import validate_age
-from src.data_quality.validator import validate_income,  analyze_column_types, detect_suspicious_numeric_values
+from src.data_quality.validator import validate_income,  analyze_column_types, detect_suspicious_numeric_values, validate_dataset
 import pandas as pd
 
 def test_validate_age_flags_invalid_age():
@@ -89,3 +89,33 @@ def test_analyze_column_types_handles_empty_columns_2():
     assert results["age"]["inferred_type"] == "unknown"
     assert results["salary"]["inferred_type"] == "unknown"
     assert results["salary"]["numeric_ratio"] == 0.0
+
+
+def test_validate_dataset():
+    df1 = pd.DataFrame()
+    results1 = validate_dataset(df1)
+    assert results1['status'] == 'invalid dataset'
+    assert results1["issues"][0]["issue"] == "dataset is empty"
+
+
+    df2 = pd.DataFrame(columns=["name","age"])
+    results2 = validate_dataset(df2)
+    assert results2['status'] == 'invalid dataset'
+    assert results2["issues"][0]["issue"] == "dataset has no rows"
+
+
+    df3 = pd.DataFrame(index = [0,1,2])
+    results3 = validate_dataset(df3)
+    assert results3['status'] == 'invalid dataset'
+    assert results3["issues"][0]["issue"] == "dataset has no columns"
+
+
+    df4 = pd.DataFrame({
+        "name": ["John", "Sam"],
+        "age": [25, 30]
+    })
+    results4 = validate_dataset(df4)
+
+    assert results4["status"] == "valid dataset"
+    assert results4["message"] == "No structural errors detected."
+    assert len(results4["issues"]) == 0

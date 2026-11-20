@@ -4,7 +4,9 @@ def validate_age(df: pd.DataFrame) -> list[dict]:
     """flag rows where age is outside the allowed range"""
     issues = []
 
-    invalid_rows = df[(df['age']<0) | (df['age']>120)]
+    numeric_age = pd.to_numeric(df['age'], errors='coerce')
+
+    invalid_rows = df[(numeric_age<0) | (numeric_age>120)]
 
     for index,row in invalid_rows.iterrows():
         issues.append({

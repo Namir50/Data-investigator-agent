@@ -3,8 +3,10 @@ from pprint import pprint
 
 from src.data_quality.pipeline import analyze_dataframe
 
-df = pd.read_csv("data/sample_customers.csv",
-            na_values=[" "])
+df = pd.DataFrame(index=[0, 1, 2])
+
+# df = pd.read_csv("data/sample_customers.csv",
+#             na_values=[" "])
 
 report = analyze_dataframe(df)
 

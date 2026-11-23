@@ -12,7 +12,7 @@ def validate_age(df: pd.DataFrame) -> list[dict]:
         issues.append({
             "row_index":int(index),
             "column":"age",
-            "age": int(row['age']),
+            "value": float(numeric_age.loc[index]),
             "issue":"age is out of range"
         })
     return issues
@@ -23,13 +23,15 @@ def validate_income(df: pd.DataFrame) -> list[dict]:
 
     issues = []
 
-    invalid_rows = df[df['income']<0]
+    numeric_income = pd.to_numeric(df['income'], errors = 'coerce')
+
+    invalid_rows  = df[numeric_income < 0]
 
     for index, row in invalid_rows.iterrows():
         issues.append({
             "row_index":int(index),
             "column": 'income',
-            "value" : float(row["income"]),
+            "value" : float(numeric_income.loc[index]),
             "issue":"income cannot be negative",
         })
     return issues
@@ -61,7 +63,7 @@ def validate_missing_values(df: pd.DataFrame) -> list[dict]:
             issues.append({
                 "row_index": int(index),
                 "column": column,
-                "issues":"missing value detected"
+                "issue":"missing value detected"
             })
     return issues
 

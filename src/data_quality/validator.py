@@ -12,7 +12,7 @@ def validate_age(df: pd.DataFrame) -> list[dict]:
         issues.append({
             "row_index":int(index),
             "column":"age",
-            "value": float(numeric_age.loc[index]),
+            "value": int(numeric_age.loc[index]),
             "issue":"age is out of range"
         })
     return issues
@@ -31,7 +31,7 @@ def validate_income(df: pd.DataFrame) -> list[dict]:
         issues.append({
             "row_index":int(index),
             "column": 'income',
-            "value" : float(numeric_income.loc[index]),
+            "value" : int(numeric_income.loc[index]),
             "issue":"income cannot be negative",
         })
     return issues

@@ -1,10 +1,22 @@
 
-customer_id,age,income,city
-101,25,45000,Mumbai
-102,32,65000,Pune
-103,170,52000,Mumbai
-104,45,90000,Delhi
-104,45,90000,Delhi
-105,150,-40000,Nashik
-106,nan,53000,Goa
-107,one hundred,70000,Bangalore
+customer_id,name,age,income,city,department,experience,phone
+101,Aarav,25,45000,Mumbai,Sales,2,9876543210
+102,Priya,150,65000,Pune,HR,5,9876543211
+103,Rahul,-5,52000,Mumbai,Engineering,3,9876543212
+104,Ananya,32,-40000,Delhi,Finance,4,9876543213
+105,Vivaan,45,90000,Delhi,Sales,10,9876543214
+105,Vivaan,45,90000,Delhi,Sales,10,9876543214
+106,Diya,,53000,Goa,Marketing,3,9876543215
+107,Arjun,unknown,70000,Jaipur,Engineering,6,9876543216
+108,Isha,29,unknown,Mumbai,HR,2,9876543217
+109,Kabir,35,82000,,Finance,7,9876543218
+110,Meera,28,61000,Chennai,Sales,unknown,9876543219
+111,Aditya,42,75000,Hyderabad,Engineering,-3,9876543220
+112,Sara,31,58000,Mumbai,Marketing,4,
+113,Rohan,200,95000,Bangalore,Finance,12,9876543222
+114,Anaya,27,-15000,Pune,HR,3,9876543223
+115,Dev,38,68000,Mumbai,Sales,8,9876543224
+116,Myra,24,42000,Delhi,Marketing,1,9876543225
+117,Reyansh,33,72000,Jaipur,Engineering,5,9876543226
+118,Kiara,26,50000,Goa,HR,2,9876543227
+119,Om,29,55000,Mumbai,Sales,3,9876543228

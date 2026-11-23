@@ -1,5 +1,5 @@
 from src.data_quality.validator import validate_age
-from src.data_quality.validator import validate_income,  analyze_column_types, detect_suspicious_numeric_values, validate_dataset
+from src.data_quality.validator import validate_income,  analyze_column_types, detect_suspicious_numeric_values, validate_dataset, validate_missing_values
 import pandas as pd
 
 def test_validate_age_flags_invalid_age():
@@ -11,7 +11,7 @@ def test_validate_age_flags_invalid_age():
     issues = validate_age(df)
 
     assert len(issues) == 2
-    assert issues[0]['age'] == -1
+    assert issues[0]['value'] == -1
 
 
 def test_validate_income_flags_negative_income():
@@ -119,3 +119,46 @@ def test_validate_dataset():
     assert results4["status"] == "valid dataset"
     assert results4["message"] == "No structural errors detected."
     assert len(results4["issues"]) == 0
+
+
+def test_validators_handle_mixed_data_types():
+    df = pd.DataFrame({
+        "age": [25, "150", "unknown", None, 100],
+        "income": [45000, -2000, "unknown", None, 50000]
+    })
+
+    age_issues = validate_age(df)
+    income_issues = validate_income(df)
+    suspicious_issues = detect_suspicious_numeric_values(df)
+    missing_issues = validate_missing_values(df)
+
+    assert len(age_issues) == 1
+    assert age_issues[0]["value"] == 150
+
+    assert len(income_issues) == 1
+    assert income_issues[0]["value"] == -2000.0
+
+    assert len(suspicious_issues) == 2
+
+    assert len(missing_issues) == 2
+
+
+def test_validators_handle_mixed_data_types():
+    df = pd.DataFrame({
+        "age": [25, "150", "unknown", None, 100],
+        "income": [45000, -2000, "unknown", None, 50000]
+    })
+
+    age_issues = validate_age(df)
+    income_issues = validate_income(df)
+    suspicious_issues = detect_suspicious_numeric_values(df)
+    missing_issues = validate_missing_values(df)
+
+    assert len(age_issues) == 1
+    assert age_issues[0]["value"] == 150
+
+    assert len(income_issues) == 1
+    assert income_issues[0]["value"] == -2000.0
+
+    assert len(suspicious_issues) == 2
+    assert len(missing_issues) == 2

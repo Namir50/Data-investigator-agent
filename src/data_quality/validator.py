@@ -100,6 +100,19 @@ def analyze_column_types(df: pd.DataFrame) -> dict:
 
     return results
 
+def get_numeric_columns(df: pd.DataFrame) -> list[str]:
+    """Return columns classified as likely numeric."""
+
+    column_analysis = analyze_column_types(df)
+
+    numeric_columns = [
+        column
+        for column, details in column_analysis.items()
+        if details["inferred_type"] == "likely_numeric"
+    ]
+
+    return numeric_columns
+
 
 def detect_suspicious_numeric_values(df: pd.DataFrame) -> list[dict]:
     """Detect non-numeric values in columns classified as likely numeric."""
@@ -158,6 +171,59 @@ def validate_dataset(df: pd.DataFrame) -> dict:
         "issues": issues
     }
 
+
+
+def execute_rule(series: pd.Series, rule: dict) -> pd.Series:
+    " ""Execute one validation rule against a Pandas Series."""
+
+    rule_type = rule["type"]
+
+    numeric_series = pd.to_numeric(series, errors="coerce")
+
+    if rule_type == "min":
+        return numeric_series < rule["value"]
+
+    elif rule_type == "max":
+        return numeric_series > rule["value"]
+
+    elif rule_type == "non_negative":
+        return numeric_series < 0
+
+    elif rule_type == "positive":
+        return numeric_series <= 0
+
+    else:
+        raise ValueError(f"Unsupported rule type: {rule_type}")
+
+
+def validate_with_rules(df: pd.DataFrame, validation_rules: dict) -> list[dict]:
+    """Apply AI-generated validation rules to a DataFrame."""
+
+    issues = []
+
+    for column, column_config in validation_rules.items():
+
+        if column not in df.columns:
+            continue
+
+        for rule in column_config["rules"]:
+
+            invalid_mask = execute_rule(df[column], rule)
+
+            invalid_rows = df.loc[invalid_mask]
+
+            for index, row in invalid_rows.iterrows():
+
+                issues.append({
+                    "row_index": int(index),
+                    "column": column,
+                    "value": row[column],
+                    "rule": rule["type"],
+                    "issue": f"Value violates {rule['type']} rule"
+                })
+
+    return issues
+ 
 
 
 
